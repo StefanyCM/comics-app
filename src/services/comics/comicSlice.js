@@ -23,6 +23,9 @@ const comicSlice = createSlice({
     getComicsFail(state, { payload }) {
       state.error = payload
       state.loading = false
+    },
+    addComic(state, { payload }) {
+      state.comics.newComics = [payload, ...state.comics.newComics]
     }
   }
 })

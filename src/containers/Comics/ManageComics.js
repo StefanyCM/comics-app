@@ -4,8 +4,12 @@ import { Api } from '../../common/api';
 import './ManageComics.css';
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { comicActions } from '../../services/comics/comicSlice'
+import { Button } from 'antd';
+import { AdminModal } from '../../components/AdminModal/AdminModal';
 
 const ManageComics = () => {
+
+  const [createModalVisible, setCreateModalVisible] = useState(false)
   /* const [comics, setComics] = useState({
     newComics: [], reviewComics: [], approvedComics: []
   }); */
@@ -53,21 +57,29 @@ const ManageComics = () => {
   );
 
   return (
-    <div className='manage-container'>
-      <ColumnCard
-        comics={assignState(comics.newComics, 'NEW')}
-        onSelect={handleSelect}
-        title='NUEVOS COMICS'
-      />
-      <ColumnCard
-        comics={assignState(comics.reviewComics, 'REVIEW')}
-        onSelect={handleSelect}
-        title='EN REVISIÓN'
-      />
-      <ColumnCard
-        comics={assignState(comics.approvedComics, 'APPROVED')}
-        onSelect={handleSelect}
-        title='APROVADOS'
+    <div>
+      <Button type="primary" onClick={() => setCreateModalVisible(true)}>Agregar comic</Button>
+      <div className='manage-container'>
+        <ColumnCard
+          comics={assignState(comics.newComics, 'NEW')}
+          onSelect={handleSelect}
+          title='NUEVOS COMICS'
+        />
+        <ColumnCard
+          comics={assignState(comics.reviewComics, 'REVIEW')}
+          onSelect={handleSelect}
+          title='EN REVISIÓN'
+        />
+        <ColumnCard
+          comics={assignState(comics.approvedComics, 'APPROVED')}
+          onSelect={handleSelect}
+          title='APROBADOS'
+        />
+      </div>
+      <AdminModal
+        visible={createModalVisible}
+        setVisible={setCreateModalVisible}
+        title="Crear Comic"
       />
     </div>
   );

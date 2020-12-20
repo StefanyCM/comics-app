@@ -1,8 +1,9 @@
-import React from 'react';
-import { Button } from 'antd';
+import React, { Fragment, useState } from 'react';
+import { Button, Divider } from 'antd';
 import './ComicCard.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { comicActions } from '../../services/comics/comicSlice';
+import { AdminModal } from '../AdminModal/AdminModal';
 
 /**
  * NEW
@@ -12,7 +13,9 @@ import { comicActions } from '../../services/comics/comicSlice';
 
 const ComicCard = ({ comic, onSelect }) => {
 
-  const { title, id, description, thumbnail, } = comic
+  const [updateModalVisible, setUpdateModalVisible] = useState(false);
+
+  const { title, id, description, thumbnail, state } = comic
 
   const { comics } = useSelector(state => state.comics)
 
@@ -34,6 +37,13 @@ const ComicCard = ({ comic, onSelect }) => {
       message = 'Seleccionar';
       buttonType = 'text';
       break;
+  }
+
+  const  deleteComic = () => {
+    dispatch(comicActions.setComics({
+      ...comics,
+      reviewComics: comics.reviewComics.filter(i => i.id !== comic.id),
+    }))
   }
 
   const onClick = () => {
@@ -97,11 +107,29 @@ const ComicCard = ({ comic, onSelect }) => {
           </div>
         }
       </div>
-      {onSelect && (
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
         <Button type={buttonType} onClick={onClick}>
           {message}
         </Button>
-      )}
+        <Divider />
+        {state == 'REVIEW' && (
+          <Fragment>
+            <Button type={buttonType} onClick={() => setUpdateModalVisible(true)}>
+              Editar
+            </Button>
+            <Button type="default" onClick={() => deleteComic()}>
+              Eliminar
+            </Button>
+          </Fragment>
+        )}
+      </div>
+      <AdminModal
+        title="Actualizar comic"
+        visible={updateModalVisible}
+        setVisible={setUpdateModalVisible}
+        comic={comic}
+      />
+
     </div>
   );
 }
